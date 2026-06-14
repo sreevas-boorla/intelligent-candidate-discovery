@@ -1,0 +1,3 @@
+# Zero external dependencies. Uses Python standard library only.
+# No pip installations required.
+# Developed with Python 3.10+

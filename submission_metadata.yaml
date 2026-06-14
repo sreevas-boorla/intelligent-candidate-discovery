@@ -1,0 +1,82 @@
+# Redrob Hackathon — Submission Metadata
+#
+# Filled in for Team Antigravity
+
+# ============================================================================
+# Team identity
+# ============================================================================
+team_name: "Antigravity"  # Used in leaderboard and announcements
+
+primary_contact:
+  name: "Sreevas Boorla"
+  email: "sreevas@example.com"   # Used for all organizer communication
+  phone: "+91-9999999999"        # Used for top-50 / top-10 outreach
+
+team_members:
+  - name: "Sreevas Boorla"
+    email: "sreevas@example.com"
+    role: "ML Engineer"          # Optional, e.g. "Team Lead", "Backend", "Data"
+
+# ============================================================================
+# Code and reproducibility
+# ============================================================================
+github_repo: "https://github.com/sreevas-boorla/intelligent-candidate-discovery"
+# Required. Must be reachable. Private repos OK if you can grant organizer
+# access at Stage 3.
+#
+sandbox_link: "https://huggingface.co/spaces/sreevas/redrob-ranker"
+# Required. A working hosted environment where the ranker can be run on a small
+# candidate sample.
+#
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./team_antigravity.csv"
+# The single command that produces team_antigravity.csv from candidates.jsonl.
+# Runs end-to-end within 30 seconds on CPU.
+
+# ============================================================================
+# Compute environment
+# ============================================================================
+compute:
+  platform: "Local Windows PC"                  # Or: "AWS EC2 c5.4xlarge", "Local Linux box", etc.
+  cpu_cores: 8                                  # Number of CPU cores used
+  ram_gb: 16                                    # Available RAM in GB
+  python_version: "3.10.0"                      # python --version
+  os: "Windows 11"                              # Or "macOS 14.2", etc.
+  uses_gpu_for_inference: false                 # Must be false — see compute constraints
+  has_network_during_ranking: false             # Must be false — no API calls during ranking
+  pre_computation_required: false               # true if you pre-compute embeddings or train models offline
+  pre_computation_time_minutes: 0               # Approximate, if applicable
+
+# ============================================================================
+# AI tools declaration
+# ============================================================================
+# Transparency only — declared use is NOT penalized. Be honest. Stage 5 interview
+# may verify these declarations against your code.
+ai_tools_used:
+  - "Gemini"
+  - "Other"  # Antigravity AI Agent
+
+ai_usage_summary: |
+  Used Gemini 3.5 Flash and the Antigravity AI coding assistant for system architecture design,
+  exploratory data analysis of the candidate pool, logic contradiction mapping, and code generation.
+  No candidate data was shared with external API endpoints during the execution phase.
+
+# ============================================================================
+# Approach summary (optional but recommended)
+# ============================================================================
+methodology_summary: |
+  Offline rule-based ranker combined with logic-based honeypot filters. Disqualifies candidate profiles
+  with contradictory dates, durations, and skills. Scores candidates across role title alignment (AI/ML core),
+  skills relevance (weighted by duration and proficiency to penalize keyword stuffing), experience target,
+  local location match (Noida/Pune preference), and notice period duration. Adjusts scores using platform
+  engagement behavioral multipliers (activity recency, response rates, interview completion). Tie-breaks using
+  candidate_id ascending.
+
+# ============================================================================
+# Declarations
+# ============================================================================
+declarations:
+  read_submission_spec: true        # I have read submission_spec.md in full
+  code_is_original_work: true       # My code is my team's original work (using AI as a tool is fine)
+  no_collusion: true                # I have not coordinated my submission with other teams
+  honeypot_check_done: true         # OPTIONAL — set true if you explicitly checked for honeypots in your ranking
+  reproduction_tested: true         # I have tested that my reproduce_command runs end-to-end

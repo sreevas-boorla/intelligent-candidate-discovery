@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redrob Candidate Discovery & Ranking Platform</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Style sheet -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-icon">R</div>
+                <span>Redrob AI</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-tab="dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="jd">
+                    <i data-lucide="file-text"></i>
+                    <span>Job Description</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="honeypots">
+                    <i data-lucide="shield-alert"></i>
+                    <span>Honeypots</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="version">Version 4.0 (Hackathon)</div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-title">
+                    <h1>Intelligent Candidate Discovery</h1>
+                    <p>Rank and analyze candidate profiles against the Senior AI Engineer JD</p>
+                </div>
+                <div class="header-actions">
+                    <div class="status-badge connected">
+                        <span class="status-dot"></span>
+                        Offline Engine Active
+                    </div>
+                </div>
+            </header>
+
+            <!-- Tab Content: Dashboard -->
+            <div id="dashboard" class="tab-content active">
+                <!-- Top Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-label">Total Candidates Loaded</span>
+                            <span class="stat-value" id="stat-total">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i data-lucide="user-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-label">Valid Profiles</span>
+                            <span class="stat-value" id="stat-valid">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon red">
+                            <i data-lucide="shield-alert"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-label">Honeypots Skipped</span>
+                            <span class="stat-value" id="stat-honeypots">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dropzone Section -->
+                <div class="card upload-card">
+                    <div class="card-header">
+                        <h2>Load Candidate Dataset</h2>
+                        <p>Drag and drop candidates.jsonl, sample_candidates.json or any subset file.</p>
+                    </div>
+                    <div class="upload-zone" id="dropzone">
+                        <input type="file" id="file-input" accept=".json,.jsonl,.gz" style="display: none;">
+                        <div class="upload-icon-container">
+                            <i data-lucide="upload-cloud"></i>
+                        </div>
+                        <h3>Drag & Drop file here</h3>
+                        <p class="upload-hint">Supports JSON / JSONL format (Max 500MB)</p>
+                        <button class="btn btn-primary" id="btn-browse">Browse Files</button>
+                    </div>
+                    <!-- Loading Bar -->
+                    <div class="progress-container" id="progress-container" style="display: none;">
+                        <div class="progress-header">
+                            <span id="progress-status">Parsing candidate database...</span>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Content (hidden until loaded) -->
+                <div id="results-section" style="display: none;">
+                    <!-- Analytics Grid -->
+                    <div class="analytics-grid">
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <h3>Score Distribution</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="scoreChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <h3>Experience Levels</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="expChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rankings List -->
+                    <div class="card table-card">
+                        <div class="card-header table-header">
+                            <div>
+                                <h2>Top 100 Ranked Candidates</h2>
+                                <p>Deterministic tie-breaker applied (ascending candidate_id)</p>
+                            </div>
+                            <button class="btn btn-success" id="btn-download">
+                                <i data-lucide="download"></i>
+                                Download Submission CSV
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table" id="results-table">
+                                <thead>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Candidate ID</th>
+                                        <th>Score</th>
+                                        <th>Name</th>
+                                        <th>Headline & Company</th>
+                                        <th>Location & Notice</th>
+                                        <th>Reasoning</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Job Description -->
+            <div id="jd" class="tab-content">
+                <div class="card jd-card">
+                    <div class="card-header">
+                        <h2>Role Profile: Senior AI Engineer — Founding Team</h2>
+                        <span class="badge badge-purple">Series A | Founding Team</span>
+                    </div>
+                    <div class="jd-content">
+                        <h3>Role Core Focus</h3>
+                        <p>Own the intelligence layer of Redrob's talent platform, specifically the matching, search, and retrieval pipelines that connect recruiters and candidates.</p>
+                        
+                        <div class="jd-grid">
+                            <div class="jd-section">
+                                <h4>Essential Requirements</h4>
+                                <ul>
+                                    <li>5-9 years of total experience (ideal: 6-8 years).</li>
+                                    <li>Production experience building embeddings-based retrieval systems (sentence-transformers, BGE, E5, etc.).</li>
+                                    <li>Hands-on database operations with Milvus, Pinecone, Qdrant, Weaviate, or Elasticsearch.</li>
+                                    <li>Strong Python coding skills and experience building offline evaluation frameworks (NDCG, MRR, MAP).</li>
+                                </ul>
+                            </div>
+                            <div class="jd-section">
+                                <h4>Ideal-to-Have Skills</h4>
+                                <ul>
+                                    <li>Fine-tuning experience (LoRA, PEFT).</li>
+                                    <li>Learning-to-rank systems (XGBoost, neural).</li>
+                                    <li>Prior hiring/marketplace product exposure.</li>
+                                    <li>Notice periods &le; 30 days.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Honeypots -->
+            <div id="honeypots" class="tab-content">
+                <div class="card info-card red-border">
+                    <div class="card-header">
+                        <h2>Honeypot Analysis Panel</h2>
+                        <p>Hackathon ground truth scores force honeypot candidates to Tier 0 relevance. Ranking them leads to instant disqualification.</p>
+                    </div>
+                    <div class="honeypots-summary">
+                        <div class="honeypot-stats-grid">
+                            <div class="h-stat-box">
+                                <span class="h-num" id="h-total-skipped">0</span>
+                                <span class="h-lbl">Honeypots Skipped</span>
+                            </div>
+                            <div class="h-stat-box">
+                                <span class="h-num">0%</span>
+                                <span class="h-lbl">Top-100 Honeypot Rate</span>
+                            </div>
+                        </div>
+                        <h3>Rules Triggered by Filtered Candidates</h3>
+                        <div class="rules-list">
+                            <div class="rule-item">
+                                <div class="rule-title"><i data-lucide="shield"></i> Skill Duration contradiction</div>
+                                <div class="rule-desc">Expert/advanced skills listed with exactly 0 duration months.</div>
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-title"><i data-lucide="calendar"></i> Job Duration mismatch</div>
+                                <div class="rule-desc">Job stated duration months deviate from calendar start/end dates by more than 6 months.</div>
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-title"><i data-lucide="clock"></i> Job Duration exceeds stated experience</div>
+                                <div class="rule-desc">Duration of a single career entry exceeds stated total years of experience.</div>
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-title"><i data-lucide="activity"></i> Total experience mismatch</div>
+                                <div class="rule-desc">Stated total years of experience deviates from sum of job durations by more than 5 years.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Ignore large candidate pool dataset
+candidates.jsonl
+sample_candidates.json
+
+# Ignore binary challenge documents and archives
+*.docx
+*.pdf
+*.zip
+__MACOSX/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
