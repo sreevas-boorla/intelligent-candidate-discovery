@@ -617,7 +617,7 @@ function downloadCSV() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "team_antigravity.csv");
+    link.setAttribute("download", "team_ai_alchemists.csv");
     document.body.appendChild(link); // Required for FF
     
     link.click();

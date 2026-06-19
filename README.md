@@ -1,6 +1,6 @@
 # Redrob AI Candidate Discovery & Ranking Platform
 
-This repository contains the solution for the **Intelligent Candidate Discovery & Ranking Challenge** by Team **Antigravity**.
+This repository contains the solution for the **Intelligent Candidate Discovery & Ranking Challenge** by Team **AI Alchemists**.
 
 Our ranker achieves a 0% honeypot rate in the top 100 by executing logic-grounded filters, and scores candidates across multiple job-fit dimensions and platform behavior indicators.
 
@@ -13,13 +13,13 @@ Our ranker achieves a 0% honeypot rate in the top 100 by executing logic-grounde
 ### Command to Reproduce the Submission CSV
 Run the following command in the repository root to rank the candidates and produce the submission:
 ```bash
-python rank.py --candidates ./candidates.jsonl --out ./team_antigravity.csv
+python rank.py --candidates ./candidates.jsonl --out ./team_ai_alchemists.csv
 ```
 
 ### Validate the Submission CSV Format
 To run the format check on the generated CSV:
 ```bash
-python validate_submission.py team_antigravity.csv
+python validate_submission.py team_ai_alchemists.csv
 ```
 
 ---

@@ -1,11 +1,11 @@
 # Redrob Hackathon — Submission Metadata
 #
-# Filled in for Team Antigravity
+# Filled in for Team AI Alchemists
 
 # ============================================================================
 # Team identity
 # ============================================================================
-team_name: "Antigravity"  # Used in leaderboard and announcements
+team_name: "AI Alchemists"  # Used in leaderboard and announcements
 
 primary_contact:
   name: "Sreevas Boorla"
@@ -28,8 +28,8 @@ sandbox_link: "https://huggingface.co/spaces/sreevas/redrob-ranker"
 # Required. A working hosted environment where the ranker can be run on a small
 # candidate sample.
 #
-reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./team_antigravity.csv"
-# The single command that produces team_antigravity.csv from candidates.jsonl.
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./team_ai_alchemists.csv"
+# The single command that produces team_ai_alchemists.csv from candidates.jsonl.
 # Runs end-to-end within 30 seconds on CPU.
 
 # ============================================================================
